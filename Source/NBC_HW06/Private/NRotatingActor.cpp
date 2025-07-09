@@ -24,11 +24,6 @@ void ANRotatingActor::BeginPlay()
 		SetRandom();
 	}
 
-	if (!bIsCircleDirection) 
-	{
-		RotationSpeed = RotationSpeed * -1;
-	}
-
 	GetWorld()->GetTimerManager().SetTimer(
 		TimerHandle, 
 		FTimerDelegate::CreateLambda([this]()
@@ -42,9 +37,18 @@ void ANRotatingActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator RotationDelta(0.0f, RotationSpeed * DeltaTime, 0.0f);
-	AddActorLocalRotation(RotationDelta);
+	float RotationAmount;
+	if (bIsCircleDirection)
+	{
+		RotationAmount = RotationSpeed * DeltaTime;
+	}
+	else
+	{
+		RotationAmount = RotationSpeed * -1 * DeltaTime;
+	}
 
+	FRotator RotationDelta(0.0f, RotationAmount, 0.0f);
+	AddActorLocalRotation(RotationDelta);
 }
 
 void ANRotatingActor::SetRandom()
